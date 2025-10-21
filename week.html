@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Week</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            text-align: center;
+        }
+        .week-range {
+            font-size: 32px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .separator {
+            color: #3498db;
+            margin: 0 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="week-range" id="weekRange"></div>
+    </div>
+
+    <script>
+        function getWeekRange() {
+            const now = new Date();
+            
+            // Get Monday of current week (Melbourne time)
+            const monday = new Date(now);
+            const day = monday.getDay();
+            const diff = monday.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is Sunday
+            monday.setDate(diff);
+            monday.setHours(0, 0, 0, 0);
+            
+            // Get Sunday of current week
+            const sunday = new Date(monday);
+            sunday.setDate(monday.getDate() + 6);
+            
+            // Format dates as DD/MM/YYYY
+            const formatDate = (date) => {
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const year = date.getFullYear();
+                return `${day}/${month}/${year}`;
+            };
+            
+            const mondayStr = formatDate(monday);
+            const sundayStr = formatDate(sunday);
+            
+            document.getElementById('weekRange').innerHTML = 
+                `${mondayStr} <span class="separator">to</span> ${sundayStr}`;
+        }
+
+        // Update on load
+        getWeekRange();
+        
+        // Update at midnight (optional - updates the date if page stays open)
+        setInterval(getWeekRange, 60000 * 60); // every hour
+    </script>
+</body>
+</html>
